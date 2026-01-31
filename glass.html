@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Glass Effect</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        /* Animated background blobs */
+        .bg-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .blob-1 {
+            width: 300px;
+            height: 300px;
+            background: #667eea;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .blob-2 {
+            width: 250px;
+            height: 250px;
+            background: #f093fb;
+            top: 50%;
+            right: 10%;
+            animation-delay: -2s;
+        }
+        
+        .blob-3 {
+            width: 200px;
+            height: 200px;
+            background: #4facfe;
+            bottom: 10%;
+            left: 30%;
+            animation-delay: -4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 10px) scale(1.05); }
+        }
+        
+        /* Content container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+        
+        .title span {
+            opacity: 0.5;
+            font-weight: 400;
+        }
+        
+        /* Glass card base */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+        }
+        
+        /* Glass variations */
+        .glass-card {
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .glass-card h3 {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .glass-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* Glass button */
+        .glass-button {
+            display: inline-block;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin: 8px 4px;
+        }
+        
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+        
+        .glass-button:active {
+            transform: scale(0.98);
+        }
+        
+        /* Glass input */
+        .glass-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 15px;
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+        
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Glass badge */
+        .glass-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            border-radius: 100px;
+            margin: 4px;
+        }
+        
+        /* Glass avatar */
+        .glass-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        /* Glass stat */
+        .glass-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .glass-stat {
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .glass-stat .value {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .glass-stat .label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+        
+        /* Glass list */
+        .glass-list {
+            list-style: none;
+        }
+        
+        .glass-list-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: background 0.2s ease;
+        }
+        
+        .glass-list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .glass-list-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-list-item .content {
+            flex: 1;
+        }
+        
+        .glass-list-item .title {
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            text-align: left;
+            margin-bottom: 2px;
+        }
+        
+        .glass-list-item .subtitle {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+        
+        /* Flex helpers */
+        .flex { display: flex; }
+        .flex-wrap { flex-wrap: wrap; }
+        .justify-center { justify-content: center; }
+        
+        /* Colored glass variants */
+        .glass-purple {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+        
+        .glass-pink {
+            background: rgba(240, 147, 251, 0.2);
+            border-color: rgba(240, 147, 251, 0.3);
+        }
+        
+        .glass-blue {
+            background: rgba(79, 172, 254, 0.2);
+            border-color: rgba(79, 172, 254, 0.3);
+        }
+        
+        /* Section spacing */
+        .section {
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blur">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    
+    <div class="container">
+        <div class="title">Glass <span>Effect</span></div>
+        
+        <div class="section">
+            <div class="section-title">Cards</div>
+            <div class="glass glass-card">
+                <h3>Glassmorphism</h3>
+                <p>Frosted glass effect with backdrop blur. Works on any element with a colorful background behind it.</p>
+            </div>
+            
+            <div class="glass glass-card glass-purple">
+                <h3>Colored Variant</h3>
+                <p>Add a tint to match your brand colors while keeping the glass effect.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Stats</div>
+            <div class="glass-stats">
+                <div class="glass glass-stat">
+                    <div class="value">47</div>
+                    <div class="label">Projects</div>
+                </div>
+                <div class="glass glass-stat glass-pink">
+                    <div class="value">128</div>
+                    <div class="label">Components</div>
+                </div>
+                <div class="glass glass-stat glass-blue">
+                    <div class="value">12K</div>
+                    <div class="label">Views</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Inputs</div>
+            <input type="text" class="glass-input" placeholder="Your email...">
+            <div class="flex justify-center flex-wrap">
+                <button class="glass glass-button">Subscribe</button>
+                <button class="glass glass-button glass-purple">Learn More</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Badges</div>
+            <div class="flex flex-wrap justify-center">
+                <span class="glass glass-badge">Design</span>
+                <span class="glass glass-badge glass-purple">Motion</span>
+                <span class="glass glass-badge glass-pink">Brand</span>
+                <span class="glass glass-badge glass-blue">UI/UX</span>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">List</div>
+            <div class="glass" style="border-radius: 20px; overflow: hidden;">
+                <ul class="glass-list">
+                    <li class="glass-list-item">
+                        <div class="glass glass-avatar glass-purple">🎨</div>
+                        <div class="content">
+                            <div class="title">Brand Identity</div>
+                            <div class="subtitle">Visual systems</div>
+                        </div>
+                    </li>
+                    <li class="glass-list-item">
+                        <div class="glass glass-avatar glass-pink">✨</div>
+                        <div class="content">
+                            <div class="title">Motion Design</div>
+                            <div class="subtitle">Animations</div>
+                        </div>
+                    </li>
+                    <li class="glass-list-item">
+                        <div class="glass glass-avatar glass-blue">📱</div>
+                        <div class="content">
+                            <div class="title">App Design</div>
+                            <div class="subtitle">Mobile first</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
