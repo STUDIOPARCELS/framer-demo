@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Motion Bento</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            padding: 16px;
+            overflow-x: hidden;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+            aspect-ratio: 1;
+        }
+        
+        @media (max-width: 500px) {
+            .bento-grid {
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+                gap: 8px;
+            }
+        }
+        
+        .bento-item {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background: #1a1a1a;
+        }
+        
+        /* Grid positions */
+        .item-1 { grid-column: 1 / 3; grid-row: 1 / 3; }
+        .item-2 { grid-column: 3 / 4; grid-row: 1 / 2; }
+        .item-3 { grid-column: 4 / 5; grid-row: 1 / 2; }
+        .item-4 { grid-column: 3 / 5; grid-row: 2 / 3; }
+        .item-5 { grid-column: 1 / 2; grid-row: 3 / 4; }
+        .item-6 { grid-column: 2 / 4; grid-row: 3 / 5; }
+        .item-7 { grid-column: 4 / 5; grid-row: 3 / 4; }
+        .item-8 { grid-column: 1 / 2; grid-row: 4 / 5; }
+        .item-9 { grid-column: 4 / 5; grid-row: 4 / 5; }
+        
+        /* Animated backgrounds */
+        .gradient-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: gradientShift1 4s ease-in-out infinite alternate;
+        }
+        
+        .gradient-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation: gradientShift2 3s ease-in-out infinite alternate;
+        }
+        
+        .gradient-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            animation: gradientShift3 5s ease-in-out infinite alternate;
+        }
+        
+        .gradient-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            animation: gradientShift4 3.5s ease-in-out infinite alternate;
+        }
+        
+        .gradient-5 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            animation: gradientShift5 4.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes gradientShift1 {
+            0% { filter: hue-rotate(0deg); transform: scale(1); }
+            100% { filter: hue-rotate(30deg); transform: scale(1.05); }
+        }
+        
+        @keyframes gradientShift2 {
+            0% { filter: hue-rotate(0deg) brightness(1); }
+            100% { filter: hue-rotate(-20deg) brightness(1.1); }
+        }
+        
+        @keyframes gradientShift3 {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(40deg); }
+        }
+        
+        @keyframes gradientShift4 {
+            0% { filter: hue-rotate(0deg); transform: scale(1); }
+            100% { filter: hue-rotate(-30deg); transform: scale(1.03); }
+        }
+        
+        @keyframes gradientShift5 {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(20deg); }
+        }
+        
+        /* Animated shapes */
+        .shape-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .circle {
+            width: 60%;
+            height: 60%;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .ring {
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.3);
+            animation: spin 8s linear infinite;
+        }
+        
+        .square {
+            width: 50%;
+            height: 50%;
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            animation: rotate 6s ease-in-out infinite;
+        }
+        
+        .lines {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 70%;
+        }
+        
+        .line {
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            animation: lineGrow 1.5s ease-in-out infinite;
+        }
+        
+        .line:nth-child(1) { animation-delay: 0s; width: 100%; }
+        .line:nth-child(2) { animation-delay: 0.2s; width: 80%; }
+        .line:nth-child(3) { animation-delay: 0.4s; width: 60%; }
+        .line:nth-child(4) { animation-delay: 0.6s; width: 90%; }
+        
+        .dots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 60%;
+        }
+        
+        .dot {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            animation: dotPulse 1s ease-in-out infinite;
+        }
+        
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.1s; }
+        .dot:nth-child(3) { animation-delay: 0.2s; }
+        .dot:nth-child(4) { animation-delay: 0.3s; }
+        .dot:nth-child(5) { animation-delay: 0.4s; }
+        .dot:nth-child(6) { animation-delay: 0.5s; }
+        .dot:nth-child(7) { animation-delay: 0.6s; }
+        .dot:nth-child(8) { animation-delay: 0.7s; }
+        .dot:nth-child(9) { animation-delay: 0.8s; }
+        
+        .wave-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+        
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(255,255,255,0.2), transparent);
+            animation: wave 3s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+        
+        .morph {
+            width: 60%;
+            height: 60%;
+            background: rgba(255,255,255,0.25);
+            animation: morph 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes rotate {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(0.9); }
+            50% { transform: rotate(180deg) scale(1); }
+            75% { transform: rotate(270deg) scale(0.9); }
+        }
+        
+        @keyframes lineGrow {
+            0%, 100% { transform: scaleX(1); opacity: 0.5; }
+            50% { transform: scaleX(0.7); opacity: 1; }
+        }
+        
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: translateX(0) scaleY(0.5); }
+            50% { transform: translateX(-25%) scaleY(1); }
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            50% { border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%; }
+            75% { border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%; }
+        }
+        
+        /* Text overlay */
+        .text-overlay {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            color: white;
+            z-index: 2;
+        }
+        
+        .text-overlay h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .text-overlay p {
+            font-size: 11px;
+            opacity: 0.8;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+        }
+        
+        /* Hover effects */
+        .bento-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .bento-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        /* Logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo span {
+            opacity: 0.5;
+            font-weight: 400;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">Motion <span>Bento</span></div>
+    
+    <div class="bento-grid">
+        <div class="bento-item item-1 gradient-1">
+            <div class="shape-container">
+                <div class="morph"></div>
+            </div>
+            <div class="text-overlay">
+                <h3>Brand Identity</h3>
+                <p>Visual systems</p>
+            </div>
+        </div>
+        
+        <div class="bento-item item-2 gradient-2">
+            <div class="shape-container">
+                <div class="circle"></div>
+            </div>
+        </div>
+        
+        <div class="bento-item item-3 gradient-3">
+            <div class="shape-container">
+                <div class="ring"></div>
+            </div>
+        </div>
+        
+        <div class="bento-item item-4 gradient-4">
+            <div class="shape-container">
+                <div class="lines">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <div class="text-overlay">
+                <h3>Typography</h3>
+                <p>Type systems</p>
+            </div>
+        </div>
+        
+        <div class="bento-item item-5 gradient-5">
+            <div class="shape-container">
+                <div class="square"></div>
+            </div>
+        </div>
+        
+        <div class="bento-item item-6 gradient-1">
+            <div class="wave-container">
+                <div class="wave"></div>
+            </div>
+            <div class="text-overlay">
+                <h3>Motion Design</h3>
+                <p>Seamless loops</p>
+            </div>
+        </div>
+        
+        <div class="bento-item item-7 gradient-2">
+            <div class="shape-container">
+                <div class="dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bento-item item-8 gradient-3">
+            <div class="shape-container">
+                <div class="circle"></div>
+            </div>
+        </div>
+        
+        <div class="bento-item item-9 gradient-4">
+            <div class="shape-container">
+                <div class="ring"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">Tap any cell</div>
+</body>
+</html>
